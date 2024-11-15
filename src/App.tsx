@@ -1,54 +1,30 @@
 import { useEffect, useState } from "react";
-import { getCurrentUser } from "aws-amplify/auth";
 import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
-
+import { useAuthenticator } from '@aws-amplify/ui-react';
 const client = generateClient<Schema>();
 
 function App() {
+  const { user, signOut } = useAuthenticator();
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+  const { signOut2 } = useAuthenticator();
   useEffect(() => {
-    checkAuthStatus();
-  }, []);
-
-  async function checkAuthStatus() {
-    try {
-      await getCurrentUser();
-      setIsAuthenticated(true);
-    } catch (error) {
-      setIsAuthenticated(false);
-      console.log('Not authenticated');
-    }
-  }
-
-  useEffect(() => {
-    if (!isAuthenticated) return;
-
     const subscription = client.models.Todo.observeQuery().subscribe({
       next: ({ items }) => setTodos([...items]),
     });
 
+    // Cleanup subscription on unmount
     return () => subscription.unsubscribe();
-  }, [isAuthenticated]);
+  }, []);
 
   async function createTodo() {
-    if (!isAuthenticated) return;
-    
     const content = window.prompt("Todo content");
     if (content) {
-      try {
-        await client.models.Todo.create({ content });
-      } catch (error) {
-        console.error("Error creating todo:", error);
-      }
+      await client.models.Todo.create({ content });
     }
   }
   
   async function deleteTodo(id: string) {
-    if (!isAuthenticated) return;
-
     try {
       await client.models.Todo.delete({ id });
     } catch (error) {
@@ -56,17 +32,9 @@ function App() {
     }
   }
 
-  if (!isAuthenticated) {
-    return (
-      <main className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Please sign in</h1>
-        {/* Add your authentication UI here */}
-      </main>
-    );
-  }
-
   return (
     <main className="p-4">
+      <h1>{user?.signInDetails?.loginId}'s todos</h1>
       <h1 className="text-2xl font-bold mb-4">My todos</h1>
       <button 
         onClick={createTodo}
@@ -90,6 +58,8 @@ function App() {
           </li>
         ))}
       </ul>
+      
+      <button onClick={signOut}>Sign out</button>
     </main>
   );
 }
