@@ -7,7 +7,6 @@ const client = generateClient<Schema>();
 function App() {
   const { user, signOut } = useAuthenticator();
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
-  const { signOut2 } = useAuthenticator();
   useEffect(() => {
     const subscription = client.models.Todo.observeQuery().subscribe({
       next: ({ items }) => setTodos([...items]),
