@@ -6,11 +6,17 @@ adding a new "isDone" field as a boolean. The authorization rule below
 specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
 =========================================================================*/
+import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+
 const schema = a.schema({
   Todo: a
     .model({
       content: a.string(),
-  .authorization(allow => [allow.owner()]),    
+    })
+    .authorization([
+      // This specifies that only authenticated users can access their own records
+      a.allow.owner()
+    ]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -18,12 +24,15 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: "apiKey",
-    // API Key is used for a.allow.public() rules
+    // Set userPool as default to require user authentication
+    defaultAuthorizationMode: "userPool",
+    
+    // Remove apiKey since we're using user authentication
+    // If you need public access to some operations, you can keep this
+    // and add specific public authorization rules to those operations
     apiKeyAuthorizationMode: {
       expiresInDays: 30,
-    },
-  defaultAuthorizationMode: 'userPool',
+    }
   },
 });
 
