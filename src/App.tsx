@@ -20,7 +20,7 @@ function App() {
   const { user, signOut } = useAuthenticator();
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(false);
-  const [{ data: aiData, isLoading, error }, generateTaskDetails] = useAIGeneration("generateTaskDetails");
+  const [{ data: aiData, isLoading }, generateTaskDetails] = useAIGeneration("generateTaskDetails");
 
   // Fetch todos on component mount
   useEffect(() => {
