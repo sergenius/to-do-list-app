@@ -1,25 +1,40 @@
-## AWS Amplify React+Vite Starter Template
+# TaskFlow
 
-This repository provides a starter template for creating applications using React+Vite and AWS Amplify, emphasizing easy setup for authentication, API, and database capabilities.
-
-## Overview
-
-This template equips you with a foundational React application integrated with AWS Amplify, streamlined for scalability and performance. It is ideal for developers looking to jumpstart their project with pre-configured AWS services like Cognito, AppSync, and DynamoDB.
+A beautiful, modern TODO productivity dashboard built with React, Vite, and Tailwind CSS.
 
 ## Features
 
-- **Authentication**: Setup with Amazon Cognito for secure user authentication.
-- **API**: Ready-to-use GraphQL endpoint with AWS AppSync.
-- **Database**: Real-time database powered by Amazon DynamoDB.
+- Add, edit, complete, and delete tasks
+- Priority levels (Low, Medium, High) and categories (Personal, Work, Health, Finance, Learning, Other)
+- Search, filter by status/priority/category, and sort tasks
+- Dashboard stats with progress bar
+- Dark mode with persisted preference
+- localStorage persistence — no backend required
+- Responsive glassmorphism UI for desktop, tablet, and mobile
 
-## Deploying to AWS
+## Tech Stack
 
-For detailed instructions on deploying your application, refer to the [deployment section](https://docs.amplify.aws/react/start/quickstart/#deploy-a-fullstack-app-to-aws) of our documentation.
+- React 18
+- Vite 5
+- Tailwind CSS 3
+- Local component state + localStorage
 
-## Security
+## Getting Started
 
-See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+```bash
+npm install
+npm run dev
+```
+
+Open the URL shown in your terminal (typically `http://localhost:5173`).
+
+## Build
+
+```bash
+npm run build
+npm run preview
+```
 
 ## License
 
-This library is licensed under the MIT-0 License. See the LICENSE file.
+MIT
