@@ -4,6 +4,8 @@ import StatsSection from './components/StatsSection'
 import TaskForm from './components/TaskForm'
 import Filters from './components/Filters'
 import TaskList from './components/TaskList'
+import Fab from './components/Fab'
+import BottomSheet from './components/BottomSheet'
 import { STORAGE_KEYS } from './utils/constants'
 import {
   getFromStorage,
@@ -37,6 +39,7 @@ export default function App() {
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [sortBy, setSortBy] = useState('newest')
   const [editingTask, setEditingTask] = useState(null)
+  const [formSheetOpen, setFormSheetOpen] = useState(false)
 
   useEffect(() => {
     setInStorage(STORAGE_KEYS.TASKS, tasks)
@@ -114,14 +117,33 @@ export default function App() {
     [editingTask, handleSaveEdit, handleAddTask],
   )
 
-  const handleCancelEdit = useCallback(() => {
+  const closeFormSheet = useCallback(() => {
+    setFormSheetOpen(false)
     setEditingTask(null)
+  }, [])
+
+  const handleCancelEdit = useCallback(() => {
+    closeFormSheet()
+  }, [closeFormSheet])
+
+  const handleOpenCreate = useCallback(() => {
+    setEditingTask(null)
+    setFormSheetOpen(true)
   }, [])
 
   const handleStartEdit = useCallback((task) => {
     setEditingTask(task)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    setFormSheetOpen(true)
+    if (window.innerWidth >= 768) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   }, [])
+
+  const handleFormSuccess = useCallback(() => {
+    if (window.innerWidth < 768) {
+      closeFormSheet()
+    }
+  }, [closeFormSheet])
 
   const handleToggleComplete = useCallback((id) => {
     setTasks((prev) =>
@@ -154,11 +176,13 @@ export default function App() {
     setSortBy('newest')
   }, [])
 
-  return (
-    <div className="min-h-screen px-4 py-6 sm:px-6 sm:py-8">
-      <div className="mx-auto max-w-[1000px] space-y-6">
-        <Header darkMode={darkMode} onToggleDarkMode={handleToggleDarkMode} />
+  const sheetTitle = editingTask ? 'Edit task' : 'New task'
 
+  return (
+    <div className="min-h-screen">
+      <Header darkMode={darkMode} onToggleDarkMode={handleToggleDarkMode} />
+
+      <div className="mx-auto max-w-[1000px] space-y-4 px-4 py-4 safe-bottom sm:space-y-5 sm:py-6">
         <StatsSection stats={stats} />
 
         <TaskForm
@@ -196,6 +220,22 @@ export default function App() {
           />
         </main>
       </div>
+
+      <Fab onClick={handleOpenCreate} />
+
+      <BottomSheet
+        open={formSheetOpen}
+        onClose={closeFormSheet}
+        title={sheetTitle}
+      >
+        <TaskForm
+          editingTask={editingTask}
+          onSubmit={handleFormSubmit}
+          onCancel={handleCancelEdit}
+          bare
+          onSuccess={handleFormSuccess}
+        />
+      </BottomSheet>
     </div>
   )
 }

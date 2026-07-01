@@ -1,21 +1,21 @@
 const EMPTY_STATE_CONFIG = {
   'no-tasks': {
-    emoji: '🌱',
+    icon: '📝',
     title: 'No tasks yet',
     description:
-      'Your dashboard is a blank canvas. Add your first task above and start planning with clarity.',
+      'Tap the + button to add your first task and start organizing your day.',
   },
   'no-results': {
-    emoji: '🔍',
+    icon: '🔍',
     title: 'No matching tasks',
     description:
-      'Nothing matches your current search or filters. Try adjusting them or reset to see all tasks.',
+      'Try changing your search or filters, or reset filters to see everything.',
   },
   'all-completed': {
-    emoji: '🎉',
+    icon: '✨',
     title: 'All caught up!',
     description:
-      'Every task is complete. Take a moment to celebrate, or add something new to keep the momentum going.',
+      'You completed everything. Add a new task whenever you are ready.',
   },
 }
 
@@ -23,14 +23,17 @@ export default function EmptyState({ variant }) {
   const config = EMPTY_STATE_CONFIG[variant] || EMPTY_STATE_CONFIG['no-tasks']
 
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300/60 bg-white/40 px-6 py-16 text-center backdrop-blur-sm dark:border-slate-600/50 dark:bg-slate-800/30">
-      <span className="mb-4 text-5xl" aria-hidden="true">
-        {config.emoji}
+    <div className="flex flex-col items-center justify-center rounded-md-lg border border-dashed border-md-outline-variant/40 bg-md-surface-container/50 px-6 py-14 text-center dark:border-md-dark-outline-variant/40 dark:bg-md-dark-surface-container/50">
+      <span
+        className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-md-primary-container text-3xl dark:bg-md-dark-primary-container"
+        aria-hidden="true"
+      >
+        {config.icon}
       </span>
-      <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+      <h3 className="text-lg font-medium text-md-on-surface dark:text-md-dark-on-surface">
         {config.title}
       </h3>
-      <p className="mt-2 max-w-sm text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+      <p className="mt-2 max-w-xs text-sm leading-relaxed text-md-on-surface-variant dark:text-md-dark-on-surface-variant">
         {config.description}
       </p>
     </div>
