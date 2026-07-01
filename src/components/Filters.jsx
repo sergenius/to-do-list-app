@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   PRIORITIES,
   CATEGORIES,
@@ -7,6 +8,7 @@ import {
   STATUS_FILTERS,
 } from '../utils/constants'
 import { hasActiveFilters } from '../utils/taskHelpers'
+import { IconSearch, IconFilter, IconCheck } from './Icons'
 
 export default function Filters({
   searchQuery,
@@ -25,72 +27,86 @@ export default function Filters({
   onResetFilters,
   onClearCompleted,
 }) {
-  const selectClass =
-    'w-full rounded-xl border border-slate-200/80 bg-white/80 px-3 py-2 text-sm text-slate-800 backdrop-blur-sm transition-all duration-200 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 dark:border-slate-600/50 dark:bg-slate-800/60 dark:text-slate-100 sm:w-auto'
+  const [expanded, setExpanded] = useState(false)
+  const filtersActive = hasActiveFilters({
+    searchQuery,
+    statusFilter,
+    priorityFilter,
+    categoryFilter,
+    sortBy,
+  })
 
-  const chipClass = (active) =>
-    `rounded-xl px-3.5 py-1.5 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-      active
-        ? 'bg-indigo-600 text-white shadow-md'
-        : 'bg-white/60 text-slate-600 hover:bg-white/90 dark:bg-slate-700/60 dark:text-slate-300 dark:hover:bg-slate-700/90'
-    }`
+  const selectClass =
+    'w-full min-h-12 rounded-md-sm border border-md-outline-variant/50 bg-md-surface-container-highest px-3 text-sm text-md-on-surface focus:border-md-primary focus:outline-none focus:ring-2 focus:ring-md-primary/30 dark:border-md-dark-outline-variant dark:bg-md-dark-surface-container-highest dark:text-md-dark-on-surface md:w-auto'
 
   return (
-    <section
-      className="rounded-2xl border border-white/30 bg-white/70 p-5 shadow-lg backdrop-blur-xl dark:border-slate-700/50 dark:bg-slate-800/60"
-      aria-label="Task filters"
-    >
-      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+    <section className="m-card p-4 md:p-5" aria-label="Task filters">
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <h2 className="text-lg font-normal text-md-on-surface dark:text-md-dark-on-surface">
           Tasks
         </h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          Showing{' '}
-          <span className="font-semibold text-slate-700 dark:text-slate-200">
-            {filteredCount}
-          </span>{' '}
-          of{' '}
-          <span className="font-semibold text-slate-700 dark:text-slate-200">
-            {totalCount}
-          </span>{' '}
-          tasks
+        <p className="text-xs text-md-on-surface-variant dark:text-md-dark-on-surface-variant sm:text-sm">
+          {filteredCount} / {totalCount}
         </p>
       </div>
 
-      <div className="space-y-4">
-        <div>
-          <label htmlFor="search-tasks" className="sr-only">
-            Search tasks
-          </label>
-          <input
-            id="search-tasks"
-            type="search"
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search by title or description..."
-            className="w-full rounded-xl border border-slate-200/80 bg-white/80 px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 backdrop-blur-sm transition-all duration-200 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 dark:border-slate-600/50 dark:bg-slate-800/60 dark:text-slate-100 dark:placeholder:text-slate-500"
-          />
-        </div>
+      <div className="m-search-bar mb-3">
+        <IconSearch className="h-5 w-5 shrink-0 text-md-on-surface-variant dark:text-md-dark-on-surface-variant" />
+        <label htmlFor="search-tasks" className="sr-only">
+          Search tasks
+        </label>
+        <input
+          id="search-tasks"
+          type="search"
+          value={searchQuery}
+          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder="Search tasks..."
+          className="m-search-input"
+        />
+      </div>
 
-        <div className="flex flex-wrap gap-2">
-          {STATUS_FILTERS.map(({ value, label }) => (
+      <div className="-mx-1 mb-3 flex gap-2 overflow-x-auto px-1 pb-1 scrollbar-hide">
+        {STATUS_FILTERS.map(({ value, label }) => {
+          const selected = statusFilter === value
+          return (
             <button
               key={value}
               type="button"
               onClick={() => onStatusChange(value)}
-              className={chipClass(statusFilter === value)}
-              aria-pressed={statusFilter === value}
+              className={`m-filter-chip shrink-0 ${selected ? 'm-chip-selected' : ''}`}
+              aria-pressed={selected}
             >
+              {selected && <IconCheck className="h-4 w-4" />}
               {label}
             </button>
-          ))}
-        </div>
+          )
+        })}
+      </div>
 
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        className="mb-3 flex w-full min-h-12 items-center justify-between rounded-md-md px-3 text-sm font-medium text-md-on-surface-variant transition-colors hover:bg-md-on-surface/5 dark:text-md-dark-on-surface-variant dark:hover:bg-md-dark-on-surface/10 md:hidden"
+        aria-expanded={expanded}
+      >
+        <span className="flex items-center gap-2">
+          <IconFilter className="h-5 w-5" />
+          More filters
+          {filtersActive && (
+            <span className="rounded-full bg-md-primary px-2 py-0.5 text-xs text-md-on-primary dark:bg-md-dark-primary dark:text-md-dark-on-primary">
+              Active
+            </span>
+          )}
+        </span>
+        <span aria-hidden="true">{expanded ? '▲' : '▼'}</span>
+      </button>
+
+      <div className={`space-y-3 ${expanded ? 'block' : 'hidden md:block'}`}>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <div>
             <label
               htmlFor="filter-priority"
-              className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400"
+              className="mb-1 block text-xs font-medium text-md-on-surface-variant dark:text-md-dark-on-surface-variant"
             >
               Priority
             </label>
@@ -112,7 +128,7 @@ export default function Filters({
           <div>
             <label
               htmlFor="filter-category"
-              className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400"
+              className="mb-1 block text-xs font-medium text-md-on-surface-variant dark:text-md-dark-on-surface-variant"
             >
               Category
             </label>
@@ -134,7 +150,7 @@ export default function Filters({
           <div>
             <label
               htmlFor="filter-sort"
-              className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400"
+              className="mb-1 block text-xs font-medium text-md-on-surface-variant dark:text-md-dark-on-surface-variant"
             >
               Sort by
             </label>
@@ -153,20 +169,12 @@ export default function Filters({
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2 pt-1">
+        <div className="flex flex-wrap gap-2">
           <button
             type="button"
             onClick={onResetFilters}
-            disabled={
-              !hasActiveFilters({
-                searchQuery,
-                statusFilter,
-                priorityFilter,
-                categoryFilter,
-                sortBy,
-              })
-            }
-            className="rounded-xl border border-slate-200/80 bg-white/60 px-4 py-2 text-sm font-medium text-slate-700 transition-all duration-200 hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600/50 dark:bg-slate-700/60 dark:text-slate-200 dark:hover:bg-slate-700/90"
+            disabled={!filtersActive}
+            className="m-btn-text !min-h-10 !px-4 disabled:opacity-40"
           >
             Reset filters
           </button>
@@ -174,7 +182,7 @@ export default function Filters({
             type="button"
             onClick={onClearCompleted}
             disabled={completedCount === 0}
-            className="rounded-xl border border-rose-200/80 bg-rose-50/80 px-4 py-2 text-sm font-medium text-rose-700 transition-all duration-200 hover:bg-rose-100 focus:outline-none focus:ring-2 focus:ring-rose-500 disabled:cursor-not-allowed disabled:opacity-40 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-300 dark:hover:bg-rose-950/60"
+            className="m-btn-text !min-h-10 !px-4 !text-md-error disabled:opacity-40 dark:!text-red-400"
           >
             Clear completed
           </button>

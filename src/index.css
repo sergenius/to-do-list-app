@@ -3,11 +3,202 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
   body {
     @apply min-h-screen font-sans antialiased;
-    @apply bg-gradient-to-br from-slate-100 via-indigo-50 to-blue-100;
-    @apply dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950;
-    @apply text-slate-800 dark:text-slate-100;
-    @apply transition-colors duration-300;
+    @apply bg-md-surface-dim text-md-on-surface;
+    @apply dark:bg-md-dark-surface dark:text-md-dark-on-surface;
+    @apply transition-colors duration-200;
+  }
+}
+
+@layer components {
+  .m-surface {
+    @apply bg-md-surface dark:bg-md-dark-surface-container;
+  }
+
+  .m-surface-container {
+    @apply bg-md-surface-container dark:bg-md-dark-surface-container-high;
+  }
+
+  .m-elevation-1 {
+    @apply shadow-md-1;
+  }
+
+  .m-elevation-2 {
+    @apply shadow-md-2;
+  }
+
+  .m-elevation-3 {
+    @apply shadow-md-3;
+  }
+
+  .m-filled-field {
+    @apply w-full rounded-t-md-sm rounded-b-md-sm border-b-2 border-md-on-surface-variant/40;
+    @apply bg-md-surface-container-highest px-4 pb-2 pt-6 text-base;
+    @apply text-md-on-surface placeholder:text-md-on-surface-variant/60;
+    @apply transition-colors duration-200;
+    @apply focus:border-md-primary focus:outline-none focus:ring-0;
+    @apply dark:bg-md-dark-surface-container-highest dark:text-md-dark-on-surface;
+    @apply dark:border-md-dark-outline-variant dark:focus:border-md-dark-primary;
+  }
+
+  .m-filled-label {
+    @apply pointer-events-none absolute left-4 top-4 text-base text-md-on-surface-variant;
+    @apply transition-all duration-200;
+    @apply dark:text-md-dark-on-surface-variant;
+  }
+
+  .m-filled-field:focus ~ .m-filled-label,
+  .m-filled-field:not(:placeholder-shown) ~ .m-filled-label {
+    @apply top-1.5 text-xs text-md-primary dark:text-md-dark-primary;
+  }
+
+  .m-filled-select {
+    @apply m-filled-field appearance-none bg-no-repeat pr-10;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%2349454F'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-position: right 8px center;
+    background-size: 24px;
+  }
+
+  .m-btn-filled {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6;
+    @apply bg-md-primary text-sm font-medium text-md-on-primary;
+    @apply shadow-md-1 transition-all duration-200;
+    @apply hover:shadow-md-2 active:scale-[0.98];
+    @apply focus:outline-none focus:ring-2 focus:ring-md-primary focus:ring-offset-2;
+    @apply disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none;
+    @apply dark:bg-md-dark-primary-container dark:text-md-dark-on-primary-container;
+    @apply dark:focus:ring-md-dark-primary dark:focus:ring-offset-md-dark-surface;
+  }
+
+  .m-btn-tonal {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6;
+    @apply bg-md-secondary-container text-sm font-medium text-md-on-primary-container;
+    @apply transition-all duration-200 active:scale-[0.98];
+    @apply focus:outline-none focus:ring-2 focus:ring-md-primary focus:ring-offset-2;
+    @apply disabled:cursor-not-allowed disabled:opacity-40;
+    @apply dark:bg-md-dark-secondary-container dark:text-md-dark-on-primary-container;
+    @apply dark:focus:ring-md-dark-primary dark:focus:ring-offset-md-dark-surface;
+  }
+
+  .m-btn-text {
+    @apply inline-flex min-h-12 min-w-12 items-center justify-center gap-2 rounded-full px-4;
+    @apply text-sm font-medium text-md-primary transition-all duration-200;
+    @apply hover:bg-md-primary/10 active:scale-[0.98];
+    @apply focus:outline-none focus:ring-2 focus:ring-md-primary;
+    @apply disabled:cursor-not-allowed disabled:opacity-40;
+    @apply dark:text-md-dark-primary dark:hover:bg-md-dark-primary/20;
+  }
+
+  .m-btn-icon {
+    @apply inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full;
+    @apply text-md-on-surface-variant transition-all duration-200;
+    @apply hover:bg-md-on-surface/10 active:scale-95;
+    @apply focus:outline-none focus:ring-2 focus:ring-md-primary;
+    @apply dark:text-md-dark-on-surface-variant dark:hover:bg-md-dark-on-surface/10;
+  }
+
+  .m-chip {
+    @apply inline-flex h-8 shrink-0 items-center gap-1 rounded-lg border px-3;
+    @apply border-md-outline-variant text-sm font-medium text-md-on-surface-variant;
+    @apply transition-all duration-200 active:scale-95;
+    @apply focus:outline-none focus:ring-2 focus:ring-md-primary;
+    @apply dark:border-md-dark-outline-variant dark:text-md-dark-on-surface-variant;
+  }
+
+  .m-chip-selected {
+    @apply border-transparent bg-md-secondary-container text-md-on-primary-container;
+    @apply dark:bg-md-dark-secondary-container dark:text-md-dark-on-primary-container;
+  }
+
+  .m-filter-chip {
+    @apply m-chip rounded-lg;
+  }
+
+  .m-card {
+    @apply m-surface-container rounded-md-lg m-elevation-1;
+    @apply transition-shadow duration-200;
+  }
+
+  .m-card-interactive {
+    @apply m-card hover:m-elevation-2 active:m-elevation-1;
+  }
+
+  .m-fab {
+    @apply fixed z-40 flex h-14 w-14 items-center justify-center rounded-2xl;
+    @apply bg-md-primary-container text-md-on-primary-container shadow-md-fab;
+    @apply transition-all duration-200 hover:shadow-md-3 active:scale-95;
+    @apply focus:outline-none focus:ring-2 focus:ring-md-primary focus:ring-offset-2;
+    @apply dark:bg-md-dark-primary-container dark:text-md-dark-on-primary-container;
+    @apply dark:focus:ring-offset-md-dark-surface;
+    bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+    right: calc(1.25rem + env(safe-area-inset-right, 0px));
+  }
+
+  .m-app-bar {
+    @apply sticky top-0 z-30 m-surface m-elevation-2;
+    @apply border-b border-md-outline-variant/20 dark:border-md-dark-outline-variant/30;
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  .m-bottom-sheet {
+    @apply fixed inset-x-0 bottom-0 z-50 flex max-h-[92dvh] flex-col;
+    @apply rounded-t-[28px] m-surface m-elevation-3;
+    @apply dark:bg-md-dark-surface-container-high;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .m-sheet-handle {
+    @apply mx-auto mt-3 h-1 w-10 shrink-0 rounded-full;
+    @apply bg-md-on-surface-variant/40 dark:bg-md-dark-on-surface-variant/40;
+  }
+
+  .m-sheet-scrim {
+    @apply fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px];
+    @apply transition-opacity duration-200;
+  }
+
+  .m-search-bar {
+    @apply flex h-14 w-full items-center gap-3 rounded-full px-4;
+    @apply bg-md-surface-container-highest text-md-on-surface;
+    @apply dark:bg-md-dark-surface-container-highest dark:text-md-dark-on-surface;
+  }
+
+  .m-search-input {
+    @apply min-w-0 flex-1 bg-transparent text-base outline-none;
+    @apply placeholder:text-md-on-surface-variant dark:placeholder:text-md-dark-on-surface-variant;
+  }
+
+  .m-linear-progress {
+    @apply h-1 overflow-hidden rounded-full bg-md-primary/20 dark:bg-md-dark-primary/25;
+  }
+
+  .m-linear-progress-bar {
+    @apply h-full rounded-full bg-md-primary transition-all duration-500 ease-out;
+    @apply dark:bg-md-dark-primary;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .safe-bottom {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  @media (min-width: 768px) {
+    .safe-bottom {
+      padding-bottom: 1.5rem;
+    }
   }
 }

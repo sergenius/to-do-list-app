@@ -30,44 +30,40 @@ export const CATEGORY_LABELS = {
 }
 
 export const PRIORITY_STYLES = {
-  low: 'bg-slate-100 text-slate-700 dark:bg-slate-700/60 dark:text-slate-300',
-  medium: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
-  high: 'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300',
+  low: 'bg-md-surface-container-high text-md-on-surface-variant dark:bg-md-dark-surface-container-highest dark:text-md-dark-on-surface-variant',
+  medium: 'bg-amber-100 text-amber-900 dark:bg-amber-900/50 dark:text-amber-200',
+  high: 'bg-md-error-container text-md-error dark:bg-md-error/30 dark:text-red-300',
 }
 
 export const CATEGORY_STYLES = {
-  personal: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300',
-  work: 'bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300',
-  health: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
-  finance: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
-  learning: 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300',
-  other: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-700/60 dark:text-zinc-300',
+  personal: 'bg-md-primary-container text-md-on-primary-container dark:bg-md-dark-primary-container dark:text-md-dark-on-primary-container',
+  work: 'bg-md-secondary-container text-md-on-primary-container dark:bg-md-dark-secondary-container dark:text-md-dark-on-primary-container',
+  health: 'bg-emerald-100 text-emerald-900 dark:bg-emerald-900/50 dark:text-emerald-200',
+  finance: 'bg-amber-100 text-amber-900 dark:bg-amber-900/50 dark:text-amber-200',
+  learning: 'bg-violet-100 text-violet-900 dark:bg-violet-900/50 dark:text-violet-200',
+  other: 'bg-md-surface-container-highest text-md-on-surface-variant dark:bg-md-dark-surface-container-highest dark:text-md-dark-on-surface-variant',
 }
 
 export const STAT_ACCENTS = {
   total: {
-    bg: 'bg-indigo-50 dark:bg-indigo-950/40',
-    border: 'border-indigo-200/60 dark:border-indigo-800/50',
-    icon: 'text-indigo-500',
-    value: 'text-indigo-700 dark:text-indigo-300',
+    bg: 'bg-md-primary-container/50 dark:bg-md-dark-primary-container/30',
+    iconColor: 'text-md-primary dark:text-md-dark-primary',
+    value: 'text-md-on-primary-container dark:text-md-dark-on-primary-container',
   },
   completed: {
-    bg: 'bg-emerald-50 dark:bg-emerald-950/40',
-    border: 'border-emerald-200/60 dark:border-emerald-800/50',
-    icon: 'text-emerald-500',
-    value: 'text-emerald-700 dark:text-emerald-300',
+    bg: 'bg-emerald-100 dark:bg-emerald-900/30',
+    iconColor: 'text-emerald-700 dark:text-emerald-400',
+    value: 'text-emerald-900 dark:text-emerald-300',
   },
   pending: {
-    bg: 'bg-amber-50 dark:bg-amber-950/40',
-    border: 'border-amber-200/60 dark:border-amber-800/50',
-    icon: 'text-amber-500',
-    value: 'text-amber-700 dark:text-amber-300',
+    bg: 'bg-amber-100 dark:bg-amber-900/30',
+    iconColor: 'text-amber-700 dark:text-amber-400',
+    value: 'text-amber-900 dark:text-amber-300',
   },
   highPriority: {
-    bg: 'bg-rose-50 dark:bg-rose-950/40',
-    border: 'border-rose-200/60 dark:border-rose-800/50',
-    icon: 'text-rose-500',
-    value: 'text-rose-700 dark:text-rose-300',
+    bg: 'bg-md-error-container/80 dark:bg-md-error/20',
+    iconColor: 'text-md-error dark:text-red-400',
+    value: 'text-md-error dark:text-red-300',
   },
 }
 
