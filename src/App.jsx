@@ -8,25 +8,16 @@ import Fab from './components/Fab'
 import BottomSheet from './components/BottomSheet'
 import { STORAGE_KEYS } from './utils/constants'
 import {
-  getFromStorage,
   setInStorage,
   getBooleanFromStorage,
   setBooleanInStorage,
 } from './utils/storage'
+import { loadInitialTasks } from './utils/taskStorage'
 import {
   createTask,
-  getSampleTasks,
   computeStats,
   filterAndSortTasks,
 } from './utils/taskHelpers'
-
-function loadInitialTasks() {
-  const stored = getFromStorage(STORAGE_KEYS.TASKS)
-  if (Array.isArray(stored) && stored.length > 0) {
-    return stored
-  }
-  return getSampleTasks()
-}
 
 export default function App() {
   const [tasks, setTasks] = useState(loadInitialTasks)
