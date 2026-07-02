@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { getInitialTasks } from './taskStorage.js'
+import { getInitialTasks } from './taskStorageCore.js'
 
 test('uses a stored empty task list instead of sample tasks', () => {
   const sampleTasks = [{ id: 'sample-task' }]
