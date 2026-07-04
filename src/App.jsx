@@ -20,6 +20,8 @@ import {
   filterAndSortTasks,
 } from './utils/taskHelpers'
 
+const MOBILE_BREAKPOINT = 768
+
 function loadInitialTasks() {
   const stored = getFromStorage(STORAGE_KEYS.TASKS)
   if (Array.isArray(stored) && stored.length > 0) {
@@ -123,7 +125,12 @@ export default function App() {
   }, [])
 
   const handleCancelEdit = useCallback(() => {
-    closeFormSheet()
+    if (window.innerWidth < MOBILE_BREAKPOINT) {
+      closeFormSheet()
+      return
+    }
+    setEditingTask(null)
+    setFormSheetOpen(false)
   }, [closeFormSheet])
 
   const handleOpenCreate = useCallback(() => {
@@ -133,16 +140,16 @@ export default function App() {
 
   const handleStartEdit = useCallback((task) => {
     setEditingTask(task)
-    setFormSheetOpen(true)
-    if (window.innerWidth >= 768) {
+    if (window.innerWidth < MOBILE_BREAKPOINT) {
+      setFormSheetOpen(true)
+    } else {
+      setFormSheetOpen(false)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }, [])
 
   const handleFormSuccess = useCallback(() => {
-    if (window.innerWidth < 768) {
-      closeFormSheet()
-    }
+    closeFormSheet()
   }, [closeFormSheet])
 
   const handleToggleComplete = useCallback((id) => {
@@ -189,6 +196,7 @@ export default function App() {
           editingTask={editingTask}
           onSubmit={handleFormSubmit}
           onCancel={handleCancelEdit}
+          idPrefix="inline-task"
         />
 
         <Filters
@@ -232,6 +240,7 @@ export default function App() {
           editingTask={editingTask}
           onSubmit={handleFormSubmit}
           onCancel={handleCancelEdit}
+          idPrefix="sheet-task"
           bare
           onSuccess={handleFormSuccess}
         />
