@@ -5,9 +5,12 @@ import {
   PRIORITY_LABELS,
   CATEGORY_LABELS,
 } from '../utils/constants'
+import { normalizeTags } from '../utils/tagHelpers'
+import TagInput from './TagInput'
 
 const defaultForm = {
   title: '',
+  tags: [],
   description: '',
   priority: 'medium',
   category: 'personal',
@@ -76,6 +79,7 @@ export default function TaskForm({
     if (editingTask) {
       setForm({
         title: editingTask.title,
+        tags: normalizeTags(editingTask.tags),
         description: editingTask.description,
         priority: editingTask.priority,
         category: editingTask.category,
@@ -133,6 +137,11 @@ export default function TaskForm({
           Please enter a task title.
         </p>
       )}
+
+      <TagInput
+        tags={form.tags}
+        onChange={(tags) => handleChange('tags', tags)}
+      />
 
       <FilledField
         id="task-description"

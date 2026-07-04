@@ -8,6 +8,7 @@ import {
   STATUS_FILTERS,
 } from '../utils/constants'
 import { hasActiveFilters } from '../utils/taskHelpers'
+import { formatTagLabel } from '../utils/tagHelpers'
 import { IconSearch, IconFilter, IconCheck } from './Icons'
 
 export default function Filters({
@@ -15,6 +16,8 @@ export default function Filters({
   statusFilter,
   priorityFilter,
   categoryFilter,
+  tagFilter,
+  availableTags,
   sortBy,
   filteredCount,
   totalCount,
@@ -23,6 +26,7 @@ export default function Filters({
   onStatusChange,
   onPriorityChange,
   onCategoryChange,
+  onTagChange,
   onSortChange,
   onResetFilters,
   onClearCompleted,
@@ -33,6 +37,7 @@ export default function Filters({
     statusFilter,
     priorityFilter,
     categoryFilter,
+    tagFilter,
     sortBy,
   })
 
@@ -82,6 +87,40 @@ export default function Filters({
           )
         })}
       </div>
+
+      {availableTags.length > 0 && (
+        <div className="mb-3">
+          <p className="mb-2 text-xs font-medium text-md-on-surface-variant dark:text-md-dark-on-surface-variant">
+            Tags
+          </p>
+          <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 scrollbar-hide">
+            <button
+              type="button"
+              onClick={() => onTagChange('all')}
+              className={`m-filter-chip shrink-0 ${tagFilter === 'all' ? 'm-chip-selected' : ''}`}
+              aria-pressed={tagFilter === 'all'}
+            >
+              {tagFilter === 'all' && <IconCheck className="h-4 w-4" />}
+              All tags
+            </button>
+            {availableTags.map((tag) => {
+              const selected = tagFilter === tag
+              return (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => onTagChange(selected ? 'all' : tag)}
+                  className={`m-filter-chip shrink-0 ${selected ? 'm-chip-selected' : ''}`}
+                  aria-pressed={selected}
+                >
+                  {selected && <IconCheck className="h-4 w-4" />}
+                  #{formatTagLabel(tag)}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       <button
         type="button"

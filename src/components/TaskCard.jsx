@@ -5,6 +5,7 @@ import {
   PRIORITY_STYLES,
   CATEGORY_STYLES,
 } from '../utils/constants'
+import { formatTagLabel } from '../utils/tagHelpers'
 import {
   formatDueDate,
   formatRelativeDate,
@@ -83,6 +84,19 @@ export default function TaskCard({ task, onToggleComplete, onEdit, onDelete }) {
               )}
             </div>
           </div>
+
+          {task.tags?.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {task.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-flex items-center rounded-md-sm bg-md-primary-container/70 px-2 py-0.5 text-xs font-medium text-md-on-primary-container dark:bg-md-dark-primary-container/70 dark:text-md-dark-on-primary-container"
+                >
+                  #{formatTagLabel(tag)}
+                </span>
+              ))}
+            </div>
+          )}
 
           {task.description && (
             <p
