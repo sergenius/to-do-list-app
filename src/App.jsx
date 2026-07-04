@@ -196,6 +196,7 @@ export default function App() {
           editingTask={editingTask}
           onSubmit={handleFormSubmit}
           onCancel={handleCancelEdit}
+          idPrefix="inline-task"
         />
 
         <Filters
@@ -239,6 +240,7 @@ export default function App() {
           editingTask={editingTask}
           onSubmit={handleFormSubmit}
           onCancel={handleCancelEdit}
+          idPrefix="sheet-task"
           bare
           onSuccess={handleFormSuccess}
         />
