@@ -1,4 +1,5 @@
 import { PRIORITIES } from './constants'
+import { normalizeTags, normalizeTask } from './tagHelpers'
 
 const PRIORITY_ORDER = { high: 0, medium: 1, low: 2 }
 
@@ -8,10 +9,11 @@ export function generateId() {
 
 export function createTask(overrides = {}) {
   const now = new Date().toISOString()
-  return {
+  return normalizeTask({
     id: generateId(),
     title: '',
     description: '',
+    tags: [],
     completed: false,
     priority: 'medium',
     category: 'personal',
@@ -19,7 +21,7 @@ export function createTask(overrides = {}) {
     createdAt: now,
     updatedAt: now,
     ...overrides,
-  }
+  })
 }
 
 function daysFromNow(days) {
@@ -39,6 +41,7 @@ export function getSampleTasks() {
     createTask({
       title: 'Review weekly goals',
       description: 'Reflect on progress and set priorities for the coming week.',
+      tags: ['planning', 'weekly'],
       priority: 'high',
       category: 'work',
       dueDate: daysFromNow(1),
@@ -48,6 +51,7 @@ export function getSampleTasks() {
     createTask({
       title: 'Prepare project update',
       description: 'Draft slides and metrics for the team standup.',
+      tags: ['work', 'presentation'],
       priority: 'medium',
       category: 'work',
       dueDate: daysFromNow(3),
@@ -57,6 +61,7 @@ export function getSampleTasks() {
     createTask({
       title: 'Go to the gym',
       description: 'Leg day — squats, lunges, and stretching.',
+      tags: ['health', 'fitness'],
       priority: 'medium',
       category: 'health',
       dueDate: daysFromNow(0),
@@ -66,6 +71,7 @@ export function getSampleTasks() {
     createTask({
       title: 'Read 20 pages',
       description: 'Continue reading "Atomic Habits".',
+      tags: ['learning', 'habits'],
       priority: 'low',
       category: 'learning',
       dueDate: daysFromNow(5),
@@ -75,6 +81,7 @@ export function getSampleTasks() {
     createTask({
       title: 'Pay credit card',
       description: 'Settle the monthly statement before the due date.',
+      tags: ['finance', 'urgent'],
       priority: 'high',
       category: 'finance',
       dueDate: daysFromNow(-1),
@@ -137,17 +144,24 @@ export function computeStats(tasks) {
 }
 
 export function filterAndSortTasks(tasks, filters) {
-  const { searchQuery, statusFilter, priorityFilter, categoryFilter, sortBy } =
-    filters
+  const {
+    searchQuery,
+    statusFilter,
+    priorityFilter,
+    categoryFilter,
+    tagFilter,
+    sortBy,
+  } = filters
 
-  let result = [...tasks]
+  let result = tasks.map(normalizeTask)
 
   if (searchQuery.trim()) {
     const query = searchQuery.toLowerCase().trim()
     result = result.filter(
       (task) =>
         task.title.toLowerCase().includes(query) ||
-        task.description.toLowerCase().includes(query),
+        task.description.toLowerCase().includes(query) ||
+        task.tags.some((tag) => tag.includes(query)),
     )
   }
 
@@ -163,6 +177,10 @@ export function filterAndSortTasks(tasks, filters) {
 
   if (categoryFilter !== 'all') {
     result = result.filter((task) => task.category === categoryFilter)
+  }
+
+  if (tagFilter !== 'all') {
+    result = result.filter((task) => task.tags.includes(tagFilter))
   }
 
   result.sort((a, b) => {
@@ -192,8 +210,11 @@ export function hasActiveFilters(filters) {
     filters.statusFilter !== 'all' ||
     filters.priorityFilter !== 'all' ||
     filters.categoryFilter !== 'all' ||
+    filters.tagFilter !== 'all' ||
     filters.sortBy !== 'newest'
   )
 }
+
+export { normalizeTask }
 
 export { PRIORITIES }

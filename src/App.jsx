@@ -18,12 +18,14 @@ import {
   getSampleTasks,
   computeStats,
   filterAndSortTasks,
+  normalizeTask,
 } from './utils/taskHelpers'
+import { collectAllTags } from './utils/tagHelpers'
 
 function loadInitialTasks() {
   const stored = getFromStorage(STORAGE_KEYS.TASKS)
   if (Array.isArray(stored) && stored.length > 0) {
-    return stored
+    return stored.map(normalizeTask)
   }
   return getSampleTasks()
 }
@@ -37,6 +39,7 @@ export default function App() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [priorityFilter, setPriorityFilter] = useState('all')
   const [categoryFilter, setCategoryFilter] = useState('all')
+  const [tagFilter, setTagFilter] = useState('all')
   const [sortBy, setSortBy] = useState('newest')
   const [editingTask, setEditingTask] = useState(null)
   const [formSheetOpen, setFormSheetOpen] = useState(false)
@@ -52,15 +55,18 @@ export default function App() {
 
   const stats = useMemo(() => computeStats(tasks), [tasks])
 
+  const availableTags = useMemo(() => collectAllTags(tasks), [tasks])
+
   const filters = useMemo(
     () => ({
       searchQuery,
       statusFilter,
       priorityFilter,
       categoryFilter,
+      tagFilter,
       sortBy,
     }),
-    [searchQuery, statusFilter, priorityFilter, categoryFilter, sortBy],
+    [searchQuery, statusFilter, priorityFilter, categoryFilter, tagFilter, sortBy],
   )
 
   const filteredTasks = useMemo(
@@ -76,6 +82,7 @@ export default function App() {
     const newTask = createTask({
       title: formData.title.trim(),
       description: formData.description.trim(),
+      tags: formData.tags,
       priority: formData.priority,
       category: formData.category,
       dueDate: formData.dueDate,
@@ -93,6 +100,7 @@ export default function App() {
                 ...task,
                 title: formData.title.trim(),
                 description: formData.description.trim(),
+                tags: formData.tags,
                 priority: formData.priority,
                 category: formData.category,
                 dueDate: formData.dueDate,
@@ -173,6 +181,7 @@ export default function App() {
     setStatusFilter('all')
     setPriorityFilter('all')
     setCategoryFilter('all')
+    setTagFilter('all')
     setSortBy('newest')
   }, [])
 
@@ -196,6 +205,8 @@ export default function App() {
           statusFilter={statusFilter}
           priorityFilter={priorityFilter}
           categoryFilter={categoryFilter}
+          tagFilter={tagFilter}
+          availableTags={availableTags}
           sortBy={sortBy}
           filteredCount={filteredTasks.length}
           totalCount={tasks.length}
@@ -204,6 +215,7 @@ export default function App() {
           onStatusChange={setStatusFilter}
           onPriorityChange={setPriorityFilter}
           onCategoryChange={setCategoryFilter}
+          onTagChange={setTagFilter}
           onSortChange={setSortBy}
           onResetFilters={handleResetFilters}
           onClearCompleted={handleClearCompleted}
