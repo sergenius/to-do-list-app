@@ -49,6 +49,22 @@ export default function App() {
   }, [tasks])
 
   useEffect(() => {
+    function handleTaskStorageChange(event) {
+      if (event.storageArea !== localStorage || event.key !== STORAGE_KEYS.TASKS) {
+        return
+      }
+
+      const storedTasks = getFromStorage(STORAGE_KEYS.TASKS)
+      if (Array.isArray(storedTasks)) {
+        setTasks(storedTasks)
+      }
+    }
+
+    window.addEventListener('storage', handleTaskStorageChange)
+    return () => window.removeEventListener('storage', handleTaskStorageChange)
+  }, [])
+
+  useEffect(() => {
     setBooleanInStorage(STORAGE_KEYS.DARK_MODE, darkMode)
     document.documentElement.classList.toggle('dark', darkMode)
   }, [darkMode])
