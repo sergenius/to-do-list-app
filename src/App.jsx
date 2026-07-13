@@ -57,6 +57,12 @@ export default function App() {
 
   const availableTags = useMemo(() => collectAllTags(tasks), [tasks])
 
+  useEffect(() => {
+    if (tagFilter !== 'all' && !availableTags.includes(tagFilter)) {
+      setTagFilter('all')
+    }
+  }, [availableTags, tagFilter])
+
   const filters = useMemo(
     () => ({
       searchQuery,
