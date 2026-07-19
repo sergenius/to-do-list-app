@@ -43,9 +43,10 @@ export default function App() {
   const [sortBy, setSortBy] = useState('newest')
   const [editingTask, setEditingTask] = useState(null)
   const [formSheetOpen, setFormSheetOpen] = useState(false)
+  const [taskStorageFailed, setTaskStorageFailed] = useState(false)
 
   useEffect(() => {
-    setInStorage(STORAGE_KEYS.TASKS, tasks)
+    setTaskStorageFailed(!setInStorage(STORAGE_KEYS.TASKS, tasks))
   }, [tasks])
 
   useEffect(() => {
@@ -192,6 +193,16 @@ export default function App() {
       <Header darkMode={darkMode} onToggleDarkMode={handleToggleDarkMode} />
 
       <div className="mx-auto max-w-[1000px] space-y-4 px-4 py-4 safe-bottom sm:space-y-5 sm:py-6">
+        {taskStorageFailed && (
+          <div
+            role="alert"
+            className="rounded-md-md border border-md-error/40 bg-md-error-container px-4 py-3 text-sm text-md-error dark:border-red-400/40 dark:bg-md-error/20 dark:text-red-200"
+          >
+            Tasks could not be saved in this browser. Changes made in this
+            session may be lost when you reload.
+          </div>
+        )}
+
         <StatsSection stats={stats} />
 
         <TaskForm
