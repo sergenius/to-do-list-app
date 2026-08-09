@@ -69,6 +69,7 @@ export default function TaskForm({
   onSubmit,
   onCancel,
   bare = false,
+  idPrefix = 'task',
   onSuccess,
 }) {
   const [form, setForm] = useState(defaultForm)
@@ -139,6 +140,7 @@ export default function TaskForm({
       )}
 
       <TagInput
+        inputId={`${idPrefix}-tags`}
         tags={form.tags}
         onChange={(tags) => handleChange('tags', tags)}
       />
