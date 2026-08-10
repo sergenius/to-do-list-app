@@ -5,7 +5,7 @@ import {
   PRIORITY_LABELS,
   CATEGORY_LABELS,
 } from '../utils/constants'
-import { normalizeTags } from '../utils/tagHelpers'
+import { normalizeTags, parseTagsInput } from '../utils/tagHelpers'
 import TagInput from './TagInput'
 
 const defaultForm = {
@@ -72,6 +72,7 @@ export default function TaskForm({
   onSuccess,
 }) {
   const [form, setForm] = useState(defaultForm)
+  const [tagDraft, setTagDraft] = useState('')
   const [showValidation, setShowValidation] = useState(false)
   const isEditing = Boolean(editingTask)
 
@@ -85,9 +86,11 @@ export default function TaskForm({
         category: editingTask.category,
         dueDate: editingTask.dueDate,
       })
+      setTagDraft('')
       setShowValidation(false)
     } else {
       setForm(defaultForm)
+      setTagDraft('')
       setShowValidation(false)
     }
   }, [editingTask])
@@ -115,10 +118,12 @@ export default function TaskForm({
       setShowValidation(true)
       return
     }
-    onSubmit(form)
+    const tags = normalizeTags([...form.tags, ...parseTagsInput(tagDraft)])
+    onSubmit({ ...form, tags })
     if (!isEditing) {
       setForm(defaultForm)
     }
+    setTagDraft('')
     setShowValidation(false)
     onSuccess?.()
   }
@@ -141,6 +146,8 @@ export default function TaskForm({
       <TagInput
         tags={form.tags}
         onChange={(tags) => handleChange('tags', tags)}
+        inputValue={tagDraft}
+        onInputChange={setTagDraft}
       />
 
       <FilledField

@@ -1,15 +1,18 @@
-import { useState } from 'react'
 import { parseTagsInput, normalizeTags, formatTagLabel } from '../utils/tagHelpers'
 import { IconClose } from './Icons'
 
-export default function TagInput({ tags, onChange, inputId = 'task-tags' }) {
-  const [inputValue, setInputValue] = useState('')
-
+export default function TagInput({
+  tags,
+  onChange,
+  inputValue,
+  onInputChange,
+  inputId = 'task-tags',
+}) {
   function commitInput(value = inputValue) {
     const parsed = parseTagsInput(value)
     if (parsed.length === 0) return
     onChange(normalizeTags([...tags, ...parsed]))
-    setInputValue('')
+    onInputChange('')
   }
 
   function handleKeyDown(event) {
@@ -59,7 +62,7 @@ export default function TagInput({ tags, onChange, inputId = 'task-tags' }) {
             id={inputId}
             type="text"
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={(e) => onInputChange(e.target.value)}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
             placeholder={tags.length === 0 ? 'urgent, review, home...' : 'Add tag...'}
