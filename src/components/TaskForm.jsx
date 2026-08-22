@@ -68,12 +68,14 @@ export default function TaskForm({
   editingTask,
   onSubmit,
   onCancel,
+  idPrefix = 'task',
   bare = false,
   onSuccess,
 }) {
   const [form, setForm] = useState(defaultForm)
   const [showValidation, setShowValidation] = useState(false)
   const isEditing = Boolean(editingTask)
+  const fieldId = (name) => `${idPrefix}-${name}`
 
   useEffect(() => {
     if (editingTask) {
@@ -126,7 +128,7 @@ export default function TaskForm({
   const formContent = (
     <form onSubmit={handleSubmit} className="space-y-4">
       <FilledField
-        id="task-title"
+        id={fieldId('title')}
         label="Title"
         value={form.title}
         onChange={(e) => handleChange('title', e.target.value)}
@@ -144,7 +146,7 @@ export default function TaskForm({
       />
 
       <FilledField
-        id="task-description"
+        id={fieldId('description')}
         label="Description"
         value={form.description}
         onChange={(e) => handleChange('description', e.target.value)}
@@ -153,7 +155,7 @@ export default function TaskForm({
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <FilledSelect
-          id="task-priority"
+          id={fieldId('priority')}
           label="Priority"
           value={form.priority}
           onChange={(e) => handleChange('priority', e.target.value)}
@@ -166,7 +168,7 @@ export default function TaskForm({
         </FilledSelect>
 
         <FilledSelect
-          id="task-category"
+          id={fieldId('category')}
           label="Category"
           value={form.category}
           onChange={(e) => handleChange('category', e.target.value)}
@@ -179,7 +181,7 @@ export default function TaskForm({
         </FilledSelect>
 
         <FilledField
-          id="task-due-date"
+          id={fieldId('due-date')}
           label="Due date"
           type="date"
           value={form.dueDate}
