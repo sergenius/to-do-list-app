@@ -135,9 +135,10 @@ export default function App() {
   }, [closeFormSheet])
 
   const handleOpenCreate = useCallback(() => {
+    if (formSheetOpen) return
     setEditingTask(null)
     setFormSheetOpen(true)
-  }, [])
+  }, [formSheetOpen])
 
   const handleStartEdit = useCallback((task) => {
     setEditingTask(task)
@@ -233,7 +234,7 @@ export default function App() {
         </main>
       </div>
 
-      <Fab onClick={handleOpenCreate} />
+      {!formSheetOpen && <Fab onClick={handleOpenCreate} />}
 
       <BottomSheet
         open={formSheetOpen}
