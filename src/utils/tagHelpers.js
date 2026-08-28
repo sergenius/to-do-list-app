@@ -45,9 +45,13 @@ export function collectAllTags(tasks) {
 }
 
 export function normalizeTask(task) {
+  const source = task && typeof task === 'object' ? task : {}
+
   return {
-    ...task,
-    tags: normalizeTags(task.tags),
+    ...source,
+    title: String(source.title ?? ''),
+    description: String(source.description ?? ''),
+    tags: normalizeTags(source.tags),
   }
 }
 
