@@ -49,6 +49,13 @@ export default function App() {
   }, [tasks])
 
   useEffect(() => {
+    if (editingTask && !tasks.some((task) => task.id === editingTask.id)) {
+      setEditingTask(null)
+      setFormSheetOpen(false)
+    }
+  }, [editingTask, tasks])
+
+  useEffect(() => {
     setBooleanInStorage(STORAGE_KEYS.DARK_MODE, darkMode)
     document.documentElement.classList.toggle('dark', darkMode)
   }, [darkMode])
