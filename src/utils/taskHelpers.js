@@ -1,10 +1,46 @@
-import { PRIORITIES } from './constants'
-import { normalizeTags, normalizeTask } from './tagHelpers'
+import { PRIORITIES } from './constants.js'
+import { normalizeTags, normalizeTask } from './tagHelpers.js'
 
 const PRIORITY_ORDER = { high: 0, medium: 1, low: 2 }
 
 export function generateId() {
   return crypto.randomUUID()
+}
+
+function createUniqueTaskId(usedIds) {
+  let id = generateId()
+  while (usedIds.has(id)) {
+    id = generateId()
+  }
+  usedIds.add(id)
+  return id
+}
+
+function normalizeExistingId(id) {
+  if (typeof id !== 'string') return ''
+  return id.trim()
+}
+
+export function normalizeTasks(tasks) {
+  const usedIds = new Set()
+
+  return tasks.map((task) => {
+    const normalizedTask = normalizeTask(task ?? {})
+    const normalizedId = normalizeExistingId(normalizedTask.id)
+
+    if (!normalizedId || usedIds.has(normalizedId)) {
+      return {
+        ...normalizedTask,
+        id: createUniqueTaskId(usedIds),
+      }
+    }
+
+    usedIds.add(normalizedId)
+    return {
+      ...normalizedTask,
+      id: normalizedId,
+    }
+  })
 }
 
 export function createTask(overrides = {}) {

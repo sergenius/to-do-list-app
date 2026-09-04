@@ -18,14 +18,14 @@ import {
   getSampleTasks,
   computeStats,
   filterAndSortTasks,
-  normalizeTask,
+  normalizeTasks,
 } from './utils/taskHelpers'
 import { collectAllTags } from './utils/tagHelpers'
 
 function loadInitialTasks() {
   const stored = getFromStorage(STORAGE_KEYS.TASKS)
   if (Array.isArray(stored) && stored.length > 0) {
-    return stored.map(normalizeTask)
+    return normalizeTasks(stored)
   }
   return getSampleTasks()
 }
